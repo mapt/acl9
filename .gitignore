@@ -5,3 +5,11 @@ pkg
 *.log
 .yardoc
 doc
+lib/.idea/.name
+lib/.idea/encodings.xml
+lib/.idea/lib.iml
+lib/.idea/misc.xml
+lib/.idea/modules.xml
+lib/.idea/scopes/scope_settings.xml
+lib/.idea/vcs.xml
+lib/.idea/workspace.xml
