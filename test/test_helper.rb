@@ -9,6 +9,11 @@ require 'action_controller'
 require 'action_controller/test_process'
 require 'turn'
 
+
+require 'coveralls'
+Coveralls.wear!
+
+
 ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => 'test.sqlite3')
 
 class Test::Unit::TestCase
