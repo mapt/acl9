@@ -91,12 +91,16 @@ module Acl9
         has_many :accepted_roles, :as => :authorizable, :class_name => role, :dependent => :destroy
 
 
-        send :define_method, "#{subj_table}" do
-          Person.where("id in (select entity_id from entities_roles
-                            inner join roles on roles.id = role_id
-                                where authorizable_type = ?
-                                and authorizable_id = #{self.id})", self.class.base_class.to_s)
-        end
+        has_many :"#{subj_table}",
+          :finder_sql => proc { "SELECT DISTINCT #{subj_table}.* " +
+                                "FROM #{subj_table} INNER JOIN #{join_table} ON #{subj_col}_id = #{subj_table}.id " +
+                                "INNER JOIN #{role_table} ON #{role_table}.id = #{role.underscore}_id " +
+                                "WHERE authorizable_type = '#{self.class.base_class.to_s}' AND authorizable_id = #{id} "},
+          :counter_sql => proc { "SELECT COUNT(DISTINCT #{subj_table}.id)" +
+                                 "FROM #{subj_table} INNER JOIN #{join_table} ON #{subj_col}_id = #{subj_table}.id " +
+                                 "INNER JOIN #{role_table} ON #{role_table}.id = #{role.underscore}_id " +
+                                 "WHERE authorizable_type = '#{self.class.base_class.to_s}' AND authorizable_id = #{id} "},
+          :readonly => true
 
         include Acl9::ModelExtensions::ForObject
       end
